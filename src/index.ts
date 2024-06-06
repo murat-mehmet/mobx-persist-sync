@@ -29,7 +29,9 @@ export interface optionsType {
     debounce?: number
 }
 
-export interface IHydrateResult<T> extends Promise<T> {
+type FN<T> = () => T;
+
+export interface IHydrateResult<T> extends FN<T> {
     rehydrate: () => IHydrateResult<T>
 }
 
@@ -42,9 +44,9 @@ export function create({
     return function hydrate<T extends Object>(key: string, store: T, initialState: any = {}, customArgs: any = {}): IHydrateResult<T> {
         const schema = getDefaultModelSchema(store as any)
         function hydration() {
-            const promise: IHydrateResult<T> = storage.getItem(key)
-            .then((d: any) => !jsonify ? d : JSON.parse(d))
-            .then(action(
+            let d = storage.getItem(key);
+            d = !jsonify ? d : JSON.parse(d);
+            const fn: any = action(
                 `[mobx-persist ${key}] LOAD_DATA`,
                 (persisted: any) => {
                     if (persisted && typeof persisted === 'object') {
@@ -53,9 +55,9 @@ export function create({
                     mergeObservables(store, initialState)
                     return store
                 }
-            ))
-            promise.rehydrate = hydration
-            return promise
+            );
+            fn.rehydrate = hydration;
+            return fn as IHydrateResult<T>;
         }
         const result = hydration()
         reaction(

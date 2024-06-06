@@ -1,10 +1,10 @@
-export declare function clear(): Promise<{}>;
-export declare function getItem(key: string): Promise<string>;
-export declare function removeItem(key: string): Promise<{}>;
-export declare function setItem(key: string, value: string): Promise<{}>;
+export declare function clear(): void;
+export declare function getItem(key: string): string;
+export declare function removeItem(key: string): void;
+export declare function setItem(key: string, value: string): void;
 export interface IStorage {
-    getItem(key: string): Promise<string>;
-    removeItem(key: string): Promise<void>;
-    setItem(key: string, value: string): Promise<void>;
+    getItem(key: string): string;
+    removeItem(key: string): void;
+    setItem(key: string, value: string): void;
     [key: string]: any;
 }

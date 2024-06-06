@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "skipLibCheck": true,
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
@@ -14,9 +15,10 @@
             "dom"
         ]
     },
+    "include": [
+        "src/**/*.ts"
+    ],
     "exclude": [
-        "node_modules",
-        "examples",
-        "libs"
+      "node_modules",
     ]
 }

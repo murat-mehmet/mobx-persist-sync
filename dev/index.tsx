@@ -10,9 +10,9 @@ const hydrate = create({})
 
 const appState = new AppState
 hydrate('appState', appState, (window as any).__INITIAL_STATE__.app)
-  .then(() => console.log('appState hydrated'))
+console.log('appState hydrated')
 hydrate('noDecoratorState', noDecoratorState)
-  .then(() => console.log('noDecoratorState hydrated'))
+console.log('noDecoratorState hydrated')
 
 render(
   <AppContainer>

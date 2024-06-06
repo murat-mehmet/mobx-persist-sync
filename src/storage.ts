@@ -1,51 +1,23 @@
 export function clear() {
-    return new Promise((resolve, reject) => {
-        try {
-            window.localStorage.clear()
-            resolve(null)
-        } catch (err) {
-            reject(err)
-        }
-    })
+    window.localStorage.clear();
 }
 
-export function getItem(key: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        try {
-            const value = window.localStorage.getItem(key)
-            resolve(value)
-        } catch (err) {
-            reject(err)
-        }
-    })
+export function getItem(key: string): string {
+    return window.localStorage.getItem(key);
 }
 
 export function removeItem(key: string) {
-    return new Promise((resolve, reject) => {
-        try {
-            window.localStorage.removeItem(key)
-            resolve(null)
-        } catch (err) {
-            reject(err)
-        }
-    })
+    window.localStorage.removeItem(key);
 }
 
 
 export function setItem(key: string, value: string) {
-    return new Promise((resolve, reject) => {
-        try {
-            window.localStorage.setItem(key, value)
-            resolve(null)
-        } catch (err) {
-            reject(err)
-        }
-    })
+    window.localStorage.setItem(key, value);
 }
 
 export interface IStorage {
-    getItem(key: string): Promise<string>
-    removeItem(key: string): Promise<void>
-    setItem(key: string, value: string): Promise<void>
+    getItem(key: string): string
+    removeItem(key: string): void
+    setItem(key: string, value: string): void
     [key: string]: any
 }

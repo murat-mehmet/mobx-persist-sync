@@ -1,9 +1,9 @@
-# Mobx Persist
+# Mobx Persist Sync
 
 [![npm version](https://badge.fury.io/js/mobx-persist.svg)](https://badge.fury.io/js/mobx-persist)
 
 ```
-$ npm install mobx-persist --save
+$ npm install mobx-persist-sync --save
 ```
 
 ## Usage
@@ -27,15 +27,16 @@ class SomeStore {
 }
 
 const hydrate = create({
-    storage: localForage,   // or AsyncStorage in react-native.
+    storage: localForage,   // or MMKV in react-native.
                             // default: localStorage
-    jsonify: false  // if you use AsyncStorage, here shoud be true
+    jsonify: false  // if you use MMKV, here shoud be true
                     // default: true
 })
 
 // create the state
 export const someStore = new SomeStore()
-hydrate('some', someStore).then(() => console.log('someStore has been hydrated'))
+hydrate('some', someStore);
+console.log('someStore has been hydrated')
 
 ```
 
@@ -71,7 +72,8 @@ const schema = {
     }
 }
 export const someStore = persist(schema)(data)
-hydrate('some', someStore).then(() => console.log('someStore has been hydrated'))
+hydrate('some', someStore);
+console.log('someStore has been hydrated')
 ```
 
 with initial state
@@ -91,10 +93,11 @@ re-hydration
 ``` typescript
 const result = hydrate('some', someStore, initialState)
 const rehydrate = result.rehydrate
-result.then(() => console.log('some hydrated'))
+console.log('some hydrated')
 
 setTimeout(() => {
-    rehydrate().then(() => console.log('rehydrated'))
+    rehydrate();
+    console.log('rehydrated')
 }, 3000)
 ```
 
@@ -109,7 +112,7 @@ setTimeout(() => {
 #### `create(config)`
   - arguments
     - **config** *object* Describes the storage container you want your data to reside in.
-      - **storage** *[localForage](https://github.com/localForage/localForage)/AsyncStorage/localStorage* [localForage](https://github.com/localForage/localForage)-style storage API. localStorage for Web (default), AsyncStorage for React Native
+      - **storage** *[localForage](https://github.com/localForage/localForage)/MMKV/localStorage* [localForage](https://github.com/localForage/localForage)-style storage API. localStorage for Web (default), MMKV for React Native
       - **jsonify** *bool* Enables serialization as JSON
       - **debounce** *number* Debounce interval applied to storage calls (in miliseconds, default 0).
   - returns
@@ -121,7 +124,7 @@ setTimeout(() => {
       - returns *IHydrateResult*
 
 #### interface `IHydrateResult`
-  extends `Promise`
+  extends `function`
   - methods
     - **rehydrate** *function*
       - returns *IHydrateResult*

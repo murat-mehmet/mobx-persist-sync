@@ -1,5 +1,5 @@
 {
-  "name": "mobx-persist",
+  "name": "mobx-persist-sync",
   "version": "0.4.1",
   "description": "create and persist mobx stores",
   "main": "lib/index.js",
@@ -43,7 +43,7 @@
     "react-dom": "^16.0.0",
     "react-hot-loader": "^4.0.0",
     "shx": "^0.2.2",
-    "typescript": "^2.4.1",
+    "typescript": "^3.7.3",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
   }
