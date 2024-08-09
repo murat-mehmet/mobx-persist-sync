@@ -44,20 +44,18 @@ export function create({
     return function hydrate<T extends Object>(key: string, store: T, initialState: any = {}, customArgs: any = {}): IHydrateResult<T> {
         const schema = getDefaultModelSchema(store as any)
         function hydration() {
-            let d = storage.getItem(key);
-            d = !jsonify ? d : JSON.parse(d);
-            const fn: any = action(
-                `[mobx-persist ${key}] LOAD_DATA`,
-                (persisted: any) => {
+            const fn: any = action(`[mobx-persist ${key}] LOAD_DATA`,
+                () => {
+                    let persisted = storage.getItem(key);
+                    persisted = !jsonify ? persisted : JSON.parse(persisted);
                     if (persisted && typeof persisted === 'object') {
                         update(schema, store, persisted, null, customArgs)
                     }
                     mergeObservables(store, initialState)
                     return store
-                }
-            );
-            fn.rehydrate = hydration;
-            return fn as IHydrateResult<T>;
+                });
+        
+            return fn() as IHydrateResult<T>;
         }
         const result = hydration()
         reaction(
