@@ -33,6 +33,7 @@ type FN<T> = () => T;
 
 export interface IHydrateResult<T> extends FN<T> {
     rehydrate: () => IHydrateResult<T>
+    dispose: () => void;
 }
 
 export function create({
@@ -43,6 +44,7 @@ export function create({
     if (typeof localStorage !== 'undefined' && localStorage === storage) storage = Storage
     return function hydrate<T extends Object>(key: string, store: T, initialState: any = {}, customArgs: any = {}): IHydrateResult<T> {
         const schema = getDefaultModelSchema(store as any)
+        const disposer: {dispose: () => void} = {dispose: null};
         function hydration() {
             const fn: any = action(`[mobx-persist ${key}] LOAD_DATA`,
                 () => {
@@ -55,10 +57,13 @@ export function create({
                     return store
                 });
         
-            return fn() as IHydrateResult<T>;
+            const hydRes = fn() as IHydrateResult<T>;
+            hydRes.rehydrate = hydration;
+            hydRes.dispose = () => disposer.dispose();
+            return hydRes;
         }
         const result = hydration()
-        reaction(
+        disposer.dispose = reaction(
             () => serialize(schema, store),
             (data: any) => storage.setItem(key, !jsonify ? data : JSON.stringify(data)),
             {
